@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+        jdk 'node'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'checkout'
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'building'
+                sh 'mvn clean install'
+            }
+        }
+        stage('unit test') {
+            steps {
+                echo 'unit test'
+                sh 'mvn test'
+                // junit 'target/surefire-reports/*.xml' 
+            }
+        }
+    }
+    post {
+        success {
+            echo 'success'
+        }
+        unstable {
+            echo 'unstable'
+        }
+        failure {
+            echo 'failure'
+        }
+    }
+}
