@@ -1,11 +1,38 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'maven'
+        jdk 'jdk8'
+    }
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello World'
+                echo 'checkout'
+                checkout scm
             }
+        }
+        stage('Build') {
+            steps {
+                echo 'building'
+                sh 'mvn clean install'
+            }
+        }
+        stage('unit test') {
+            steps {
+                echo 'unit test'
+                sh 'mvn test'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'success'
+        }
+        unstable {
+            echo 'unstable'
+        }
+        failure {
+            echo 'failure'
         }
     }
 }
